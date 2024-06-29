@@ -22,6 +22,11 @@ class Student(BaseModel):
     age: int
     year: str
 
+class UpdateStudent(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    year: Optional[str] = None   
+
 
 # default index url
 @app.get("/")
@@ -52,7 +57,7 @@ def get_student(*, student_id: int, name: Optional[str] = None, test : int):
     return {"Data" : "Data Not found"}
 
 
-# post request
+#POST request
 @app.post("/create-student/{student_id}")
 def create_student(student_id: int, student: Student):
     if student_id in students:
@@ -60,3 +65,30 @@ def create_student(student_id: int, student: Student):
     
     students[student_id] = student
     return students
+
+#PUT request
+@app.put("/update-student/{student_id}")
+def update_student(student_id: int, student: UpdateStudent):
+    if student_id not in students:
+       return {"Error" : "mo student found"}
+    
+    if student.name != None:
+        students[student_id].name = student.name
+
+    if student.age != None:
+        students[student_id].age = student.age
+
+    if student.year != None:
+        students[student_id].year = student.year       
+    
+    students[students] = student
+    return students[student_id]
+
+#DELETE request
+@app.delete("/delete-student/{student_id}")
+def delete_student(student_id: int):
+    if student_id not in students:
+        return {'Error': 'student does not exist'}
+    
+    del students[student_id]
+    return {"message" : "student deleted succesfully"}
